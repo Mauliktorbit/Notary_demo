@@ -3,6 +3,42 @@ import { Link } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 export default function NewNotary() {
+
+  const handleValidation = () => {
+    alert('Validation Clicked!');
+  };
+
+  const [formDetails, setFormDetails] = useState({
+    enteredCaptcha1: '',
+  });
+
+  const generateCaptcha = () => {
+    return Math.random().toString(36).substring(2, 8);
+  };
+
+
+  const [captchas, setCaptchas] = useState({
+    captcha1: generateCaptcha(),
+  });
+
+  const handleChange = (e) => {
+    setFormDetails({
+      ...formDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleVerify = () => {
+    // Add verification logic here
+    alert('Verify Clicked!');
+  };
+
+  const handleCaptchaRefresh = (captchaKey) => {
+    setCaptchas((prevCaptchas) => ({
+      ...prevCaptchas,
+      [captchaKey]: generateCaptcha(),
+    }));
+  };
+
   const [values, setValues] = useState([{ name: "" }]);
   const [tabs, setTabs] = useState([
     {
@@ -77,6 +113,17 @@ export default function NewNotary() {
     });
     setTabs(updatedTabs);
   };
+
+  const [selectedQualificationn, setSelectedQualificationn] = useState('');
+
+  const handleQualificationChanges = (event) => {
+    setSelectedQualificationn(event.target.value);
+  };
+
+  const handleAadhaarOtp = () => {
+    // Add Aadhaar OTP logic here
+    alert('Aadhaar OTP Clicked!');
+};
 
   return (
     <div>
@@ -386,40 +433,66 @@ export default function NewNotary() {
                                     </div>
 
                                     <div className="aadhaar-input">
-                                      <select
-                                        id="document-type"
-                                        className="document-dropdown"
-                                      >
-                                        <option value="Aadhar card">
-                                          Aadhar card
-                                        </option>
-                                        <option value="PAN card">
-                                          Income Tax PAN
-                                        </option>
-                                        <option value="Voter ID">
-                                          Voter ID Number
-                                        </option>
-                                        <option value="Passport">
-                                          Driving License Number
-                                        </option>
-                                        <option value="Driving license">
-                                          Ration Card Number
-                                        </option>
-                                        <option value="Driving license">
-                                          Passport Number
-                                        </option>
+                                      <select id="document-type" className="document-dropdown" value={selectedQualificationn}
+                                        onChange={handleQualificationChanges}>
+
+                                        <option value="PAN card">Income Tax PAN </option>
+                                        <option value="Aadhar card">Aadhar card </option>
+                                        <option value="Voter ID">Voter ID Number</option>
+                                        <option value="Passport">Driving License Number</option>
+                                        <option value="Driving license">Ration Card Number</option>
+                                        <option value="Driving license">Passport Number </option>
                                       </select>
                                       <input
                                         type="text"
                                         id="aadhaar-number"
-                                        placeholder="Enter Document Number"
+                                        placeholder="Enter Document No."
                                       />
-                                      <button className="verify-btn">
+                                      {/* <button onClick={handleValidation} className='btn btn-cancel me-3'>Validation</button> */}
+                                      {/* <button className="verify-btn">
                                         Verify
-                                      </button>
+                                      </button> */}
                                     </div>
                                   </div>
                                 </div>
+
+                                
+
+                                <div className='col-md-12'>
+                                  <div className="kyc-row">
+                                    <div className="aadhaar-section">
+                                      <div className="aadhaar-input">
+                                        <input type="text" name="enteredCaptcha1" value={formDetails.enteredCaptcha1} onChange={handleChange} placeholder="Enter Captcha Code" />
+                                        <div className="input-row captcha-container">
+                                          <span className="captcha-box">{captchas.captcha1}</span>
+                                        </div>
+                                        <button
+                                          onClick={() => handleCaptchaRefresh('captcha1')}
+                                          className="btn btn-cancel me-3"
+                                        >
+                                          🔄
+                                        </button>
+                                        <button onClick={handleVerify} className='btn btn-cancel me-3'>Verify</button>
+                                        <button onClick={handleValidation} className='btn btn-cancel me-3'>Validation</button>
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {selectedQualificationn === 'Aadhar card' && (
+                                  <div className='col-md-12'>
+                                    <div className="kyc-row">
+                                      <div className="aadhaar-section">
+                                        <div className="aadhaar-input">
+                                          <input type="text" name="otp" placeholder='Enter OTP ' />
+                                          <button onClick={handleAadhaarOtp} className='btn btn-cancel me-3'>Send Aadhaar OTP</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+
                                 {/* </div> */}
 
                                 <div className="container">
@@ -460,7 +533,7 @@ export default function NewNotary() {
                                               alt="Verify Icon"
                                               style={{ paddingRight: "5px" }}
                                             />
-                                            Verify
+                                            Verified
                                           </p>
                                         </div>
                                       </div>
@@ -650,7 +723,7 @@ export default function NewNotary() {
                                   </div>
                                 </div>
 
-                               <div className="form-row">
+                                <div className="form-row">
                                   <div className="container">
                                     <div className="row">
                                       <div className="col-md-4">
@@ -691,7 +764,7 @@ export default function NewNotary() {
                                   </div>
                                 </div>
 
-                                
+
                                 <div className="form-row">
                                   <div className="container">
                                     <div className="row">
@@ -733,7 +806,7 @@ export default function NewNotary() {
                                 </div>
 
 
-                                
+
                               </div>
                             </div>
                           </>
@@ -777,7 +850,7 @@ export default function NewNotary() {
           >
             Back
           </Link>
-          <Link to={"/secondparty"} className="btn btn-cancel me-3 small-long">
+          <Link to={"/notary-writer"} className="btn btn-cancel me-3 small-long">
             Next
           </Link>
           <button type="submit" className="btn btn-submit small-long">
